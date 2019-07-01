@@ -3,6 +3,7 @@ defmodule Wastebin.Entity.Paste do
   import Ecto.Changeset
   
   @primary_key {:id, :binary_id, autogenerate: true}
+  @derive {Poison.Encoder, only: [:id, :filename, :slug]}
 
   schema "paste" do
     field :filename, :string

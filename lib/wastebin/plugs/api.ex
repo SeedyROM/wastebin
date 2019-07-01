@@ -7,6 +7,9 @@ defmodule Wastebin.Plugs.API do
   plug Plug.Parsers, parsers: [:urlencoded, :multipart]
 
   plug :match
+  plug Plug.Parsers, parsers: [:json],
+                     pass:  ["application/json"],
+                     json_decoder: Poison
   plug :dispatch
 
   get "/" do
@@ -17,9 +20,10 @@ defmodule Wastebin.Plugs.API do
       }
     )
 
-    changeset |> Repo.insert
-
-    send_resp(conn, 200, "Hello Plug")
+    {:ok, entity} = changeset |> Repo.insert
+    payload = entity |> Poison.encode!
+    
+    send_resp(conn, 200, payload)
   end
 
   match _ do
