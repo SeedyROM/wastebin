@@ -41,9 +41,9 @@ defmodule Wastebin.Plugs.APITest do
       assert conn.status == 200
   
       body = sent_resp(conn) |> decode_body
-
       has_valid_keys = contains_keys(body, @required_fields)
       assert has_valid_keys == true
+      
       assert body["filename"] == "test-filename.file"
     end
   end

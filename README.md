@@ -1,21 +1,16 @@
-# Wastebin
+# Wasteful
 
-**TODO: Add description**
+**A self made learning exercise in Elixir**
+
+## Dependencies
+
+You'll need Postgres installed locally for now, the following commands
+will create the database as long as your default user credentials are `postgres:postgres`!
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `wastebin` to your list of dependencies in `mix.exs`:
-
-```elixir
-def deps do
-  [
-    {:wastebin, "~> 0.1.0"}
-  ]
-end
-```
-
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/wastebin](https://hexdocs.pm/wastebin).
+* `mix deps.get`
+* `mix ecto.create`
+* `mix ecto.migrate`
+* `mix test`
 
