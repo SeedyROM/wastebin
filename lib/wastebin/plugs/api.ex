@@ -13,12 +13,7 @@ defmodule Wastebin.Plugs.API do
   plug :dispatch
 
   get "/" do
-    changeset = Paste.changeset(
-      %Paste{},
-      %{
-        "filename" => "fuck.png",
-      }
-    )
+    changeset = Paste.changeset(%Paste{}, conn.body_params)
 
     {:ok, entity} = changeset |> Repo.insert
     payload = entity |> Poison.encode!

@@ -32,7 +32,9 @@ defmodule Wastebin.Plugs.APITest do
     test "initial plug returns back valid message" do
       conn = 
         :get
-        |> conn("/")
+        |> conn("/", %{
+          "filename" => "test-filename.file",
+        })
         |> API.call(@opts)
   
       assert conn.state == :sent
@@ -42,6 +44,7 @@ defmodule Wastebin.Plugs.APITest do
 
       has_valid_keys = contains_keys(body, @required_fields)
       assert has_valid_keys == true
+      assert body["filename"] == "test-filename.file"
     end
   end
 end
