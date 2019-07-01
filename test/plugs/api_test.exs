@@ -6,6 +6,10 @@ defmodule Wastebin.Plugs.APITest do
 
   @opts API.init([])
 
+  setup do
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Wastebin.Repo)
+  end
+
   test "404" do
     conn = conn(:get, "/xxFakePagexx")
       |> API.call(@opts)
