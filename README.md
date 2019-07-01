@@ -1,4 +1,4 @@
-# Wastebin
+# 🗑️ Wastebin
 
 **A self made learning exercise in Elixir**
 
