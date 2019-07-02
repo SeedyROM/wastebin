@@ -29,6 +29,7 @@ defmodule Wastebin.MixProject do
       {:ecto, "~> 2.0"},
       {:postgrex, "~> 0.11"},
       {:poison, "~> 3.1"},
+      {:ex_doc, "~> 0.19", only: :dev, runtime: false},
     ]
   end
 end
