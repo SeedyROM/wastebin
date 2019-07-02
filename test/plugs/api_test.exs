@@ -3,50 +3,45 @@ defmodule Wastebin.Plugs.APITest do
   use Plug.Test
   use Test.CaseHelpers
 
-  @opts API.init([])
-
+  @api_opts API.init([])
   @valid_test_filename "test-filename.jpg"
   @valid_paste_body %{
     :filename => @valid_test_filename
   }
-  @invalid_paste_body %{
-    :blah => :nah
-  }
-
-  setup do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Wastebin.Repo)
-    {:ok, _entity} =
-      Paste.changeset(%Paste{}, @valid_paste_body)
-      |> Repo.insert
-
-    :ok
-  end
-
   @required_fields [
     "id", 
     "filename", 
     "slug"
   ]
 
-  describe "initial brain tests" do    
+  setup do
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Wastebin.Repo)
+    {:ok, entity} =
+      Paste.changeset(%Paste{}, @valid_paste_body)
+      |> Repo.insert
+
+    {:ok, entity: entity}
+  end
+
+  describe "should 404 on invalid pastes" do    
     test "404" do
       conn = 
         :get
-        |> conn("/xxFakePagexx")
-        |> API.call(@opts)
+        |> conn("/#{Ecto.UUID.generate()}")
+        |> API.call(@api_opts)
   
       assert conn.state == :sent
       assert conn.status == 404
   
-      body = sent_resp(conn) |> get_body
-      assert body == "Not Found"
+      body = sent_resp(conn) |> decode_body
+      assert body["message"] == "Not Found"
     end
   
     test "can list pastes" do
       conn = 
         :get
         |> conn("/")
-        |> API.call(@opts)
+        |> API.call(@api_opts)
       
       assert conn.state == :sent
       assert conn.status == 200
@@ -55,14 +50,26 @@ defmodule Wastebin.Plugs.APITest do
       assert length(body["pastes"]) == 1
     end
 
+    test "can show single paste information", %{entity: entity} do
+      IO.inspect(entity)
+
+      conn =
+        :get
+        |> conn("/#{entity.id}")
+        |> API.call(@api_opts)
+
+      assert conn.state == :sent
+      assert conn.status == 200
+    end
+
     test "can create paste" do
       conn = 
         :post
         |> conn("/", @valid_paste_body)
-        |> API.call(@opts)
+        |> API.call(@api_opts)
   
       assert conn.state == :sent
-      assert conn.status == 200
+      assert conn.status == 201
   
       body = sent_resp(conn) |> decode_body
 

@@ -1,6 +1,5 @@
 defmodule Wastebin.Plugs.API do
   import Ecto.Query
-  use Plug.Router
 
   alias Wastebin.Helpers
   use Helpers.JSONRouter
@@ -20,13 +19,21 @@ defmodule Wastebin.Plugs.API do
   post "/" do
     changeset = Paste.changeset(%Paste{}, conn.body_params)
 
-    {:ok, entity} = changeset |> Repo.insert
-    payload = %{paste: entity} |> Poison.encode!
+    {:ok, paste} = changeset |> Repo.insert
+    payload = %{paste: paste} |> Poison.encode!
     
-    send_resp(conn, 200, payload)
+    send_resp(conn, 201, payload)
   end
 
-  match _ do
-    send_resp(conn, 404, "Not Found")
+  get "/:id" do
+    paste = Repo.one(
+      from p in Paste,
+        where: p.id == ^id
+    )
+
+    IO.inspect(paste)
+    send_resp(conn, 200, "yes")
   end
+
+
 end
