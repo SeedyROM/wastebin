@@ -1,5 +1,7 @@
 # 🗑️ Wastebin
 
+[![Build Status](https://travis-ci.com/SeedyROM/wastebin.svg?branch=master)](https://travis-ci.com/SeedyROM/wastebin)
+
 **A self made learning exercise in Elixir**
 
 ## Dependencies
