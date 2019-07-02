@@ -26,14 +26,10 @@ defmodule Wastebin.Plugs.API do
   end
 
   get "/:id" do
-    paste = Repo.one(
-      from p in Paste,
-        where: p.id == ^id
-    )
-
-    IO.inspect(paste)
-    send_resp(conn, 200, "yes")
+    found = Repo.get(Paste, id)
+    case found do
+      nil -> send_resp(conn, 404, %{message: "Not Found"} |> Poison.encode!)
+      _ -> send_resp(conn, 200, %{paste: found} |> Poison.encode!)
+    end
   end
-
-
 end
