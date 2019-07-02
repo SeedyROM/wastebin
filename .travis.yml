@@ -6,4 +6,4 @@ otp_release:
 services: 
   - postgresql
 before_script:
-  - psql -c 'create database wastebin_test_repo;' -U postgres
+  - MIX_ENV=test mix do ecto.create, ecto.migrate
