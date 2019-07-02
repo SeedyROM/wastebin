@@ -25,7 +25,7 @@ defmodule Wastebin.Plugs.APITest do
   @required_fields [
     "id", 
     "filename", 
-    "slug",
+    "slug"
   ]
 
   describe "initial brain tests" do    
@@ -52,8 +52,7 @@ defmodule Wastebin.Plugs.APITest do
       assert conn.status == 200
 
       body = sent_resp(conn) |> decode_body
-
-      assert body["pastes"].length == 1
+      assert length(body["pastes"]) == 1
     end
 
     test "can create paste" do
@@ -66,10 +65,11 @@ defmodule Wastebin.Plugs.APITest do
       assert conn.status == 200
   
       body = sent_resp(conn) |> decode_body
-      has_valid_keys = contains_keys(body, @required_fields)
+
+      has_valid_keys = contains_keys(body["paste"], @required_fields)
       assert has_valid_keys == true
       
-      assert body["filename"] == @valid_test_filename
+      assert body["paste"]["filename"] == @valid_test_filename
     end
   end
 end

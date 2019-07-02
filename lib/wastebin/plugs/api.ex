@@ -1,22 +1,19 @@
 defmodule Wastebin.Plugs.API do
+  import Ecto.Query
   use Plug.Router
 
-  alias Wastebin.Repo
-  alias Wastebin.Entity.Paste
+  alias Wastebin.Helpers
+  use Helpers.JSONRouter
+  use Helpers.Repo
 
   plug Plug.Parsers, parsers: [:urlencoded, :multipart]
 
-  plug :match
-  plug Plug.Parsers, parsers: [:json],
-                     pass:  ["application/json"],
-                     json_decoder: Poison
-  plug :dispatch
-
   get "/" do
+    pastes = Repo.all(from p in Paste)
     payload = 
-      %{"hello" => "world"} 
+      %{pastes: pastes}
       |> Poison.encode!
-    
+
     send_resp(conn, 200, payload)
   end
 
@@ -24,7 +21,7 @@ defmodule Wastebin.Plugs.API do
     changeset = Paste.changeset(%Paste{}, conn.body_params)
 
     {:ok, entity} = changeset |> Repo.insert
-    payload = entity |> Poison.encode!
+    payload = %{paste: entity} |> Poison.encode!
     
     send_resp(conn, 200, payload)
   end
