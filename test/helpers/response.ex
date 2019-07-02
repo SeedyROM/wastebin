@@ -8,6 +8,11 @@ defmodule Test.Response do
     decode_json(body)
   end
 
+  def get_body(resp) do
+    {_status, _headers, body} = resp
+    body    
+  end
+
   def contains_keys(map, keys) do
     keys |> Enum.all?(&(Map.has_key?(map, &1)))
   end

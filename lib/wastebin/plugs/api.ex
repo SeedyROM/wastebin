@@ -13,6 +13,14 @@ defmodule Wastebin.Plugs.API do
   plug :dispatch
 
   get "/" do
+    payload = 
+      %{"hello" => "world"} 
+      |> Poison.encode!
+    
+    send_resp(conn, 200, payload)
+  end
+
+  post "/" do
     changeset = Paste.changeset(%Paste{}, conn.body_params)
 
     {:ok, entity} = changeset |> Repo.insert
